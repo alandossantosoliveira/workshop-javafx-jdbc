@@ -3,6 +3,7 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alertas;
@@ -35,38 +36,22 @@ public class PrincipalViewController implements Initializable{
 	
 	@FXML
 	public void onMenuItemDepartamentoAcao() {
-		carregarView2("/gui/ListaDepartamento.fxml");
+		carregarView("/gui/ListaDepartamento.fxml", (ListaDepartamentoController controller) -> {
+			controller.setDepartamentoServico(new DepartamentoServico());
+			controller.atualizaTableView();
+		});
 	}
 	
 	@FXML
 	public void onMenuItemSobreAcao() {
-		carregarView("/gui/Sobre.fxml");
+		carregarView("/gui/Sobre.fxml", x -> {});
 	}
 
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {		
 	}
 	
-	private synchronized void carregarView(String nomeAbsoluto) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
-			VBox newVbox = loader.load();
-			
-			Scene cenaPrincipal = Main.getCenaPrincipal();
-			VBox mainVBox = (VBox) ((ScrollPane) cenaPrincipal.getRoot()).getContent();
-			
-			Node mainMenu = mainVBox.getChildren().get(0);
-		    mainVBox.getChildren().clear();
-		    mainVBox.getChildren().add(mainMenu);
-		    mainVBox.getChildren().addAll(newVbox.getChildren());
-					
-		}catch(IOException e) {
-			Alertas.showAlert("IO Exception", "Erro ao carregar view", e.getMessage(), AlertType.ERROR);
-		}
-		
-	}
-	
-	private synchronized void carregarView2(String nomeAbsoluto) {
+	private synchronized <T> void carregarView(String nomeAbsoluto, Consumer<T> inicializaController) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
 			VBox newVbox = loader.load();
@@ -79,9 +64,8 @@ public class PrincipalViewController implements Initializable{
 		    mainVBox.getChildren().add(mainMenu);
 		    mainVBox.getChildren().addAll(newVbox.getChildren());
 		    
-		    ListaDepartamentoController controllerDep = loader.getController();
-		    controllerDep.setDepartamentoServico(new DepartamentoServico());
-		    controllerDep.atualizaTableView();
+		    T controller = loader.getController();
+		    inicializaController.accept(controller);
 					
 		}catch(IOException e) {
 			Alertas.showAlert("IO Exception", "Erro ao carregar view", e.getMessage(), AlertType.ERROR);
