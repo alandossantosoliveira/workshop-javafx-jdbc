@@ -122,7 +122,7 @@ public class DepartamentoDaoJDBC implements DepartamentoDao{
 			return null;
 		}
 		catch(SQLException e) {
-			throw new DbException(e.getMessage());
+			throw new DbException(e.getMessage() + " erro ao buscar departamentos.");
 		}
 	}
 

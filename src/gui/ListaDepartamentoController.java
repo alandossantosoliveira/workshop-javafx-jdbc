@@ -40,14 +40,15 @@ public class ListaDepartamentoController implements Initializable{
 	private TableColumn<Departamento, String> colunaNome;
 	
 	@FXML
-	private Button btNovo;
+	private Button btIncluir;
 	
 	private ObservableList<Departamento> obsLista;
 	
 	@FXML
-	public void onBtNovoAcao(ActionEvent evento) {
+	public void onBtIncluirAcao(ActionEvent evento) {
 		Stage paiStage = Utils.stageAtual(evento);
-		criarDialogForm("/gui/DepartamentoForm.fxml", paiStage);
+		Departamento obj = new Departamento();
+		criarDialogForm(obj, "/gui/DepartamentoForm.fxml", paiStage);
 	}
 	
 	public void setDepartamentoServico(DepartamentoServico servicoDep) {
@@ -76,10 +77,14 @@ public class ListaDepartamentoController implements Initializable{
 		tableViewDepartamento.setItems(obsLista);
 	}
 	
-	private void criarDialogForm(String nomeAbsolutoTela, Stage paiStage) {
+	private void criarDialogForm(Departamento obj, String nomeAbsolutoTela, Stage paiStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsolutoTela));
 			Pane pane = loader.load();
+			
+			DepartamentoFormController controller = loader.getController();
+			controller.setDepartamento(obj);
+			controller.atualizaDadosForm();
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Entre com os dados do departamento");
