@@ -22,7 +22,7 @@ public class DepartamentoDaoJDBC implements DepartamentoDao{
 	}
 
 	@Override
-	public void insert(Departamento obj) {
+	public void inserir(Departamento obj) {
 		
 		PreparedStatement st = null;
 		
@@ -55,7 +55,7 @@ public class DepartamentoDaoJDBC implements DepartamentoDao{
 	}
 
 	@Override
-	public void update(Departamento obj) {
+	public void atualizar(Departamento obj) {
 		
 		PreparedStatement st = null;
 		

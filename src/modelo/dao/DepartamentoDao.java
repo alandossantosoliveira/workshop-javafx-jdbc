@@ -6,8 +6,8 @@ import modelo.entidades.Departamento;
 
 public interface DepartamentoDao {
 
-	void insert(Departamento obj);
-	void update(Departamento obj);
+	void inserir(Departamento obj);
+	void atualizar(Departamento obj);
 	void deleteById(Integer id);
 	Departamento findById(Integer id);
 	List<Departamento> findAll();
