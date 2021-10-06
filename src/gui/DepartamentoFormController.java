@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DadoAlteradoListener;
 import gui.util.Alertas;
 import gui.util.Limitadores;
 import gui.util.Utils;
@@ -22,6 +25,8 @@ public class DepartamentoFormController implements Initializable {
 	private Departamento entidade;
 
 	private DepartamentoServico servico;
+	
+	private List<DadoAlteradoListener> dadoAlteradoListener = new ArrayList<>();
 
 	@FXML
 	private TextField txtId;
@@ -45,6 +50,10 @@ public class DepartamentoFormController implements Initializable {
 	public void setDepartamentoServico(DepartamentoServico servico) {
 		this.servico = servico;
 	}
+	
+	public void subscreverDadoAlteradoListener(DadoAlteradoListener listener) {
+		dadoAlteradoListener.add(listener);
+	}
 
 	@FXML
 	public void onBtSalvarAcao(ActionEvent evento) {
@@ -57,11 +66,18 @@ public class DepartamentoFormController implements Initializable {
 		try {
 			entidade = getDadosForm();
 			servico.salvarOuAtualizar(entidade);
+			notificaDadoAlteradoListener();
 			Utils.stageAtual(evento).close();
 		} catch (DbException e) {
 			Alertas.showAlert("Erro ao salvar", null, e.getMessage(), AlertType.ERROR);
 		}
 
+	}
+
+	private void notificaDadoAlteradoListener() {
+		for(DadoAlteradoListener listener : dadoAlteradoListener) {
+			listener.onDadoAlterado();
+		}
 	}
 
 	private Departamento getDadosForm() {
@@ -95,7 +111,5 @@ public class DepartamentoFormController implements Initializable {
 			txtId.setText(String.valueOf(entidade.getId()));
 			txtNome.setText(entidade.getNome());
 		}
-
 	}
-
 }
