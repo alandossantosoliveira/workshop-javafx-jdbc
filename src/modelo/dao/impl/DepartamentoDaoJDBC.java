@@ -10,6 +10,7 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import modelo.dao.DepartamentoDao;
 import modelo.entidades.Departamento;
 
@@ -78,10 +79,8 @@ public class DepartamentoDaoJDBC implements DepartamentoDao{
 	}
 
 	@Override
-	public void deleteById(Integer id) {
-		
-		PreparedStatement st = null;
-		
+	public void deleteById(Integer id) {		
+		PreparedStatement st = null;		
 		try {
 			st = conn.prepareStatement(
 					"delete from departamento "
@@ -95,7 +94,7 @@ public class DepartamentoDaoJDBC implements DepartamentoDao{
 			}
 		}
 		catch (SQLException e) {
-			throw new DbException(e.getMessage());
+			throw new DbIntegrityException(e.getMessage());
 		}
 		finally {
 			DB.closeStatement(st);

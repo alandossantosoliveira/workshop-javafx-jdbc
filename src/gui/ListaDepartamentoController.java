@@ -3,9 +3,11 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import application.Main;
+import db.DbIntegrityException;
 import gui.listeners.DadoAlteradoListener;
 import gui.util.Alertas;
 import gui.util.Utils;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,6 +47,9 @@ public class ListaDepartamentoController implements Initializable, DadoAlteradoL
 
 	@FXML
 	private TableColumn<Departamento, Departamento> colunaEditar;
+
+	@FXML
+	private TableColumn<Departamento, Departamento> colunaExcluir;
 
 	@FXML
 	private Button btIncluir;
@@ -81,7 +87,8 @@ public class ListaDepartamentoController implements Initializable, DadoAlteradoL
 		List<Departamento> lista = servicoDep.busqueTodos();
 		obsLista = FXCollections.observableArrayList(lista);
 		tableViewDepartamento.setItems(obsLista);
-		iniciaEditeButtons();
+		iniciaEditButtons();
+		iniciaRemoveButtons();
 	}
 
 	private void criarDialogForm(Departamento obj, String nomeAbsolutoTela, Stage paiStage) {
@@ -112,7 +119,7 @@ public class ListaDepartamentoController implements Initializable, DadoAlteradoL
 		atualizaTableView();
 	}
 
-	private void iniciaEditeButtons() {
+	private void iniciaEditButtons() {
 		colunaEditar.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		colunaEditar.setCellFactory(param -> new TableCell<Departamento, Departamento>() {
 			private final Button button = new Button("editar");
@@ -129,6 +136,40 @@ public class ListaDepartamentoController implements Initializable, DadoAlteradoL
 						event -> criarDialogForm(obj, "/gui/DepartamentoForm.fxml", Utils.stageAtual(event)));
 			}
 		});
+	}
+
+	private void iniciaRemoveButtons() {
+		colunaExcluir.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		colunaExcluir.setCellFactory(param -> new TableCell<Departamento, Departamento>() {
+			private final Button button = new Button("excluir");
+
+			@Override
+			protected void updateItem(Departamento obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(event -> removerEntidade(obj));
+			}
+		});
+	}
+
+	protected void removerEntidade(Departamento obj) {
+		Optional<ButtonType> result = Alertas.showConfirmation("Confirmação", "Tem certeza que quer deletar?");
+		
+		if(result.get() == ButtonType.OK) {
+			if (servicoDep == null) {
+				throw new IllegalStateException("Serviço estava nulo");
+			}
+			try {
+				servicoDep.remover(obj);
+				atualizaTableView();
+			}catch(DbIntegrityException e) {
+				Alertas.showAlert("Erro remover", null, e.getMessage(), AlertType.ERROR);
+			}			
+		}
 	}
 
 }
