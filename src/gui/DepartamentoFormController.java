@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DadoAlteradoListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import modelo.entidades.Departamento;
+import modelo.excessoes.ValidacaoExcessao;
 import modelo.servicos.DepartamentoServico;
 
 public class DepartamentoFormController implements Initializable {
@@ -70,6 +73,9 @@ public class DepartamentoFormController implements Initializable {
 			Utils.stageAtual(evento).close();
 		} catch (DbException e) {
 			Alertas.showAlert("Erro ao salvar", null, e.getMessage(), AlertType.ERROR);
+		}catch(ValidacaoExcessao e) {
+			setErroMenssagens(e.getErros());
+			txtNome.requestFocus();
 		}
 
 	}
@@ -82,10 +88,20 @@ public class DepartamentoFormController implements Initializable {
 
 	private Departamento getDadosForm() {
 		Departamento obj = new Departamento();
+		
+		ValidacaoExcessao excessao = new ValidacaoExcessao("Validação erro");
 
 		obj.setId(Utils.tentaParseToInt(txtId.getText()));
+		
+		if(txtNome.getText() == null || txtNome.getText().trim().equals("")) {
+			excessao.addErro("nome", "Campo nome vazio");
+		}
 		obj.setNome(txtNome.getText());
-
+		
+		if(excessao.getErros().size() > 0) {
+			throw excessao;
+		}
+		
 		return obj;
 	}
 
@@ -111,5 +127,13 @@ public class DepartamentoFormController implements Initializable {
 			txtId.setText(String.valueOf(entidade.getId()));
 			txtNome.setText(entidade.getNome());
 		}
+	}
+	
+	private void setErroMenssagens(Map<String, String> erros) {
+		Set<String> campos = erros.keySet();
+		
+		if(campos.contains("nome")) {
+			labelErroNome.setText(erros.get("nome"));
+		}		
 	}
 }
