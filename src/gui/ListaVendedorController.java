@@ -1,7 +1,7 @@
 package gui;
 
 import java.net.URL;
-import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -40,6 +40,15 @@ public class ListaVendedorController implements Initializable, DadoAlteradoListe
 
 	@FXML
 	private TableColumn<Vendedor, String> colunaNome;
+	
+	@FXML
+	private TableColumn<Vendedor, String> colunaEmail;
+	
+	@FXML
+	private TableColumn<Vendedor, Date> colunaDataNascimento;
+	
+	@FXML
+	private TableColumn<Vendedor, Double> colunaSalarioBase;
 
 	@FXML
 	private TableColumn<Vendedor, Vendedor> colunaEditar;
@@ -71,6 +80,11 @@ public class ListaVendedorController implements Initializable, DadoAlteradoListe
 	private void inicializaNodes() {
 		colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+		colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		colunaDataNascimento.setCellValueFactory(new PropertyValueFactory<>("dataNascimento"));
+		Utils.formatTableColumnDate(colunaDataNascimento, "dd/MM/yyyy");
+		colunaSalarioBase.setCellValueFactory(new PropertyValueFactory<>("salarioBase"));
+	    Utils.formatTableColumnDouble(colunaSalarioBase, 2);
 
 		Stage stage = (Stage) Main.getCenaPrincipal().getWindow();
 		tableViewVendedor.prefHeightProperty().bind(stage.heightProperty());
