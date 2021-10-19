@@ -25,7 +25,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 	}
 
 	@Override
-	public void insert(Vendedor obj) {
+	public void inserir(Vendedor obj) {
 		
 		PreparedStatement st = null;
 		
@@ -66,7 +66,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 	}
 
 	@Override
-	public void update(Vendedor obj) {
+	public void atualizar(Vendedor obj) {
 		
 		PreparedStatement st = null;
 		
