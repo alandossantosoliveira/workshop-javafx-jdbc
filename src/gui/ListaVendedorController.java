@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,6 +27,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modelo.entidades.Vendedor;
 import modelo.servicos.VendedorServico;
@@ -104,26 +109,26 @@ public class ListaVendedorController implements Initializable, DadoAlteradoListe
 	}
 
 	private void criarDialogForm(Vendedor obj, String nomeAbsolutoTela, Stage paiStage) {
-//		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsolutoTela));
-//			Pane pane = loader.load();
-//
-//			VendedorFormController controller = loader.getController();
-//			controller.setVendedor(obj);
-//			controller.setVendedorServico(new VendedorServico());
-//			controller.subscreverDadoAlteradoListener(this);
-//			controller.atualizaDadosForm();
-//
-//			Stage dialogStage = new Stage();
-//			dialogStage.setTitle("Entre com os dados do departamento");
-//			dialogStage.setScene(new Scene(pane));
-//			dialogStage.setResizable(false);
-//			dialogStage.initOwner(paiStage);
-//			dialogStage.initModality(Modality.WINDOW_MODAL);
-//			dialogStage.showAndWait();
-//		} catch (IOException e) {
-//			Alertas.showAlert("IO Exception", null, e.getMessage(), AlertType.ERROR);
-//		}
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsolutoTela));
+			Pane pane = loader.load();
+
+			VendedorFormController controller = loader.getController();
+			controller.setVendedor(obj);
+			controller.setVendedorServico(new VendedorServico());
+			controller.subscreverDadoAlteradoListener(this);
+			controller.atualizaDadosForm();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Entre com os dados do departamento");
+			dialogStage.setScene(new Scene(pane));
+			dialogStage.setResizable(false);
+			dialogStage.initOwner(paiStage);
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.showAndWait();
+		} catch (IOException e) {
+			Alertas.showAlert("IO Exception", null, e.getMessage(), AlertType.ERROR);
+		}
 	}
 
 	@Override
