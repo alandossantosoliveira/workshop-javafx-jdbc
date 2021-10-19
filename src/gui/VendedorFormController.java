@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import modelo.entidades.Vendedor;
@@ -39,6 +43,24 @@ public class VendedorFormController implements Initializable {
 
 	@FXML
 	private Label labelErroNome;
+
+	@FXML
+	private TextField txtEmail;
+	
+	@FXML
+	private DatePicker dpDataNascimento;
+	
+	@FXML
+	private TextField txtSalarioBase;
+	
+	@FXML
+	private Label labelErroEmail;
+	
+	@FXML
+	private Label labelErroDataNascimento;
+	
+	@FXML
+	private Label labelErroSalarioBase;
 
 	@FXML
 	private Button btSalvar;
@@ -117,7 +139,10 @@ public class VendedorFormController implements Initializable {
 
 	private void inicializarNodes() {
 		Limitadores.setTextFieldInteger(txtId);
-		Limitadores.setTextFieldMaxLength(txtNome, 30);
+		Limitadores.setTextFieldMaxLength(txtNome, 70);
+		Limitadores.setTextFieldDouble(txtSalarioBase);
+		Limitadores.setTextFieldMaxLength(txtEmail, 70);
+		Utils.formatDatePicker(dpDataNascimento, "dd/MM/yyyy");
 	}
 
 	public void atualizaDadosForm() {
@@ -126,6 +151,12 @@ public class VendedorFormController implements Initializable {
 		} else {
 			txtId.setText(String.valueOf(entidade.getId()));
 			txtNome.setText(entidade.getNome());
+			txtEmail.setText(entidade.getEmail());
+			Locale.setDefault(Locale.US);
+			txtSalarioBase.setText(String.format("%.2f", entidade.getSalarioBase()));
+			if (entidade.getDataNascimento() != null) {
+				dpDataNascimento.setValue(LocalDate.ofInstant(entidade.getDataNascimento().toInstant(), ZoneId.systemDefault())  );
+			}			
 		}
 	}
 	
