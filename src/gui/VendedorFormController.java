@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -113,7 +115,6 @@ public class VendedorFormController implements Initializable {
 			Alertas.showAlert("Erro ao salvar", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidacaoExcessao e) {
 			setErroMenssagens(e.getErros());
-			txtNome.requestFocus();
 		}
 
 	}
@@ -135,10 +136,28 @@ public class VendedorFormController implements Initializable {
 			excessao.addErro("nome", "Campo nome vazio");
 		}
 		obj.setNome(txtNome.getText());
-
+		
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
+			excessao.addErro("email", "Campo email inválido");
+		}
+		obj.setEmail(txtEmail.getText());
+		
+		if(dpDataNascimento.getValue() == null) {
+			excessao.addErro("dataNascimento", "Campo data nascimento inválido");
+		}else {
+			Instant instant = Instant.from(dpDataNascimento.getValue().atStartOfDay(ZoneId.systemDefault()));
+			obj.setDataNascimento(Date.from(instant));
+		}
+		
+		if (txtSalarioBase.getText() == null || txtSalarioBase.getText().trim().equals("")) {
+			excessao.addErro("salario", "Campo salario inválido");
+		}
+		obj.setSalarioBase(Utils.tentaParseToDouble( txtSalarioBase.getText()));
+		
 		if (excessao.getErros().size() > 0) {
 			throw excessao;
 		}
+		obj.setDepartamento(comboBoxDepartamento.getValue());
 
 		return obj;
 	}
@@ -196,10 +215,11 @@ public class VendedorFormController implements Initializable {
 
 	private void setErroMenssagens(Map<String, String> erros) {
 		Set<String> campos = erros.keySet();
-
-		if (campos.contains("nome")) {
-			labelErroNome.setText(erros.get("nome"));
-		}
+		
+		labelErroNome.setText(campos.contains("nome") ? erros.get("nome") : "");		
+		labelErroEmail.setText(campos.contains("email") ? erros.get("email") : "");		
+		labelErroSalarioBase.setText(campos.contains("salario") ? erros.get("salario") : "");		
+		labelErroDataNascimento.setText(campos.contains("dataNascimento") ? erros.get("dataNascimento") : "");
 	}
 
 	private void initializeComboBoxDepartamento() {

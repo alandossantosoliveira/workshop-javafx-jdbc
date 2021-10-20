@@ -29,6 +29,20 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
+				
+				<TextField fx:id="txtId" editable="false" GridPane.columnIndex="1" />
+				<TextField fx:id="txtNome" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            	<DatePicker fx:id="dpDataNascimento" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<TextField fx:id="txtSalarioBase" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboBoxDepartamento" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+				
+				<HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+					<children>
+						<Button fx:id="btSalvar" mnemonicParsing="false" onAction="#onBtSalvarAcao" text="Salvar" />
+						<Button fx:id="btCancelar" mnemonicParsing="false" onAction="#onBtCancelarAcao" text="Cancelar" />
+					</children>
+				</HBox>
 				<Label text="Id" />
 				<Label text="Nome" GridPane.rowIndex="1" />
 				<Label text="Data Nascimento" GridPane.rowIndex="3" />
@@ -40,20 +54,6 @@
 				<Label fx:id="labelErroEmail" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 				<Label fx:id="labelErroDataNascimento" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="3" />				
 				<Label fx:id="labelErroSalarioBase" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-				
-				<TextField fx:id="txtId" editable="false" GridPane.columnIndex="1" />
-				<TextField fx:id="txtNome" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            	<DatePicker fx:id="dpDataNascimento" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<TextField fx:id="txtSalarioBase" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-				
-				<HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-					<children>
-						<Button fx:id="btSalvar" mnemonicParsing="false" onAction="#onBtSalvarAcao" text="Salvar" />
-						<Button fx:id="btCancelar" mnemonicParsing="false" onAction="#onBtCancelarAcao" text="Cancelar" />
-					</children>
-				</HBox>
-            <ComboBox fx:id="comboBoxDepartamento" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 			</children>
 		</GridPane>
 	</children>
