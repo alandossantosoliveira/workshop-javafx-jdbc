@@ -110,6 +110,7 @@ public class ListaDepartamentoController implements Initializable, DadoAlteradoL
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.showAndWait();
 		} catch (IOException e) {
+			e.printStackTrace();
 			Alertas.showAlert("IO Exception", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
